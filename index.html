@@ -1,0 +1,674 @@
+<!DOCTYPE html>
+<html lang="zh-TW" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Motion Designer Portfolio | 動態設計與商業敘事</title>
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;700;900&family=Plus+Jakarta+Sans:wght@600;800&display=swap" rel="stylesheet">
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- FontAwesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        'bg-main': '#fef6e4',
+                        'title-main': '#001858',
+                        'body-main': '#172c66',
+                        'btn-main': '#f582ae',
+                        'btn-text': '#001858',
+                        'accent-yellow': '#f3d2c1',
+                        'accent-blue': '#8bd3dd',
+                    },
+                    fontFamily: {
+                        sans: ['"Noto Sans TC"', '"Plus Jakarta Sans"', 'sans-serif'],
+                    },
+                    boxShadow: {
+                        'sticky': '4px 6px 15px rgba(0, 24, 88, 0.12)',
+                        'sticky-hover': '8px 12px 20px rgba(0, 24, 88, 0.18)',
+                        'card': '0 10px 30px -5px rgba(0, 24, 88, 0.08)',
+                        'pop': '4px 4px 0px #001858',
+                    }
+                }
+            }
+        }
+    </script>
+
+    <style>
+        body {
+            background-color: #fef6e4;
+            color: #172c66;
+            font-family: 'Noto Sans TC', sans-serif;
+            overflow-x: hidden;
+        }
+
+        /* Custom Sticky Note Effect */
+        .sticky-note {
+            transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+            position: relative;
+        }
+
+        .sticky-note::before {
+            content: '';
+            position: absolute;
+            top: -10px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 70px;
+            height: 22px;
+            background: rgba(255, 255, 255, 0.6);
+            backdrop-filter: blur(2px);
+            border: 1px solid rgba(0, 24, 88, 0.08);
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+            z-index: 10;
+        }
+
+        /* Dynamic Grid Background Pattern */
+        .bg-grid-pattern {
+            background-size: 32px 32px;
+            background-image: 
+                linear-gradient(to right, rgba(0, 24, 88, 0.04) 1px, transparent 1px),
+                linear-gradient(to bottom, rgba(0, 24, 88, 0.04) 1px, transparent 1px);
+        }
+
+        /* Pulse / Motion simulation keyframes */
+        @keyframes floatSlow {
+            0%, 100% { transform: translateY(0px) rotate(0deg); }
+            50% { transform: translateY(-8px) rotate(1deg); }
+        }
+
+        .animate-float {
+            animation: floatSlow 4s ease-in-out infinite;
+        }
+
+        /* Text stroke helper */
+        .text-stroke {
+            -webkit-text-stroke: 1.5px #001858;
+        }
+
+        /* Custom Modal Backdrop */
+        .modal-blur {
+            backdrop-filter: blur(8px);
+        }
+    </style>
+</head>
+<body class="bg-bg-main text-body-main antialiased selection:bg-btn-main selection:text-btn-text bg-grid-pattern">
+
+    <!-- Navigation Header -->
+    <header class="fixed top-0 left-0 right-0 z-50 transition-all duration-300 backdrop-blur-md bg-bg-main/80 border-b border-title-main/10" id="navbar">
+        <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 h-20 flex items-center justify-between">
+            <!-- Logo / Name with Profile Avatar -->
+            <a href="#" class="flex items-center gap-3 group">
+                <div class="w-10 h-10 rounded-xl bg-title-main border-2 border-title-main overflow-hidden flex items-center justify-center group-hover:scale-105 transition-transform shadow-pop">
+                    <img src="https://img.ai365.fans/artworks/3376e6f3-ed91-47cf-85bb-0a60902bda29/55mivw91y27.jpeg" alt="Motion Designer Avatar" class="w-full h-full object-cover">
+                </div>
+                <div>
+                    <span class="font-extrabold text-title-main text-lg tracking-tight block leading-none">MOTION DESIGN</span>
+                    <span class="text-xs text-body-main/70 font-medium tracking-wider">視覺動態與商業敘事</span>
+                </div>
+            </a>
+
+            <!-- Desktop Navigation -->
+            <nav class="hidden md:flex items-center gap-8 font-medium text-title-main">
+                <a href="#about" class="hover:text-btn-main transition-colors py-1">核心理念</a>
+                <a href="#portfolio" class="hover:text-btn-main transition-colors py-1">精選專案</a>
+                <a href="#testimonials" class="hover:text-btn-main transition-colors py-1">客戶評價</a>
+                <a href="#contact" class="bg-btn-main text-btn-text px-5 py-2.5 rounded-full font-bold shadow-pop hover:-translate-y-0.5 hover:shadow-lg transition-all duration-200">
+                    預約諮詢
+                </a>
+            </nav>
+
+            <!-- Mobile Menu Toggle Button -->
+            <button id="mobile-menu-btn" class="md:hidden text-title-main p-2 rounded-lg hover:bg-title-main/5 transition-colors focus:outline-none" aria-label="Toggle menu">
+                <i class="fa-solid fa-bars text-2xl"></i>
+            </button>
+        </div>
+
+        <!-- Mobile Navigation Drawer -->
+        <div id="mobile-menu" class="hidden md:hidden bg-bg-main border-b border-title-main/10 px-6 py-6 transition-all shadow-xl">
+            <div class="flex flex-col space-y-4 font-medium text-title-main text-lg">
+                <a href="#about" class="mobile-nav-link py-2 hover:text-btn-main transition-colors">核心理念</a>
+                <a href="#portfolio" class="mobile-nav-link py-2 hover:text-btn-main transition-colors">精選專案</a>
+                <a href="#testimonials" class="mobile-nav-link py-2 hover:text-btn-main transition-colors">客戶評價</a>
+                <a href="#contact" class="mobile-nav-link text-center bg-btn-main text-btn-text py-3 rounded-xl font-bold shadow-pop mt-2">
+                    預約諮詢
+                </a>
+            </div>
+        </div>
+    </header>
+
+    <main class="pt-20">
+        <!-- Hero Section -->
+        <section class="min-h-[88vh] flex items-center justify-center relative px-4 sm:px-6 lg:px-8 py-16 overflow-hidden">
+            <!-- Decorative Motion Circles -->
+            <div class="absolute top-1/4 left-5 w-24 h-24 rounded-full border-4 border-btn-main/30 animate-float pointer-events-none hidden sm:block"></div>
+            <div class="absolute bottom-1/4 right-10 w-36 h-36 rounded-full border-4 border-accent-blue/40 animate-float pointer-events-none hidden sm:block" style="animation-delay: -2s;"></div>
+
+            <div class="max-w-4xl mx-auto text-center relative z-10">
+                <!-- Profile Avatar Card -->
+                <div class="relative w-28 h-28 sm:w-36 sm:h-36 mx-auto mb-8 group">
+                    <div class="absolute -inset-1.5 bg-gradient-to-r from-btn-main via-accent-yellow to-accent-blue rounded-full blur-md opacity-75 group-hover:opacity-100 transition duration-500 animate-pulse"></div>
+                    <div class="relative w-full h-full rounded-full overflow-hidden border-4 border-title-main bg-[#fef6e4] shadow-pop flex items-center justify-center group-hover:scale-105 transition-transform duration-300">
+                        <img src="https://img.ai365.fans/artworks/3376e6f3-ed91-47cf-85bb-0a60902bda29/55mivw91y27.jpeg" alt="Motion Designer Headshot" class="w-full h-full object-cover">
+                    </div>
+                    <div class="absolute bottom-1 right-1 w-8 h-8 rounded-full bg-btn-main border-2 border-title-main flex items-center justify-center text-btn-text text-xs shadow-sm">
+                        <i class="fa-solid fa-wand-magic-sparkles"></i>
+                    </div>
+                </div>
+
+                <!-- Badge -->
+                <div class="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-title-main/5 border border-title-main/15 mb-8 animate-fade-in">
+                    <span class="w-2.5 h-2.5 rounded-full bg-btn-main animate-ping"></span>
+                    <span class="text-xs sm:text-sm font-bold text-title-main tracking-wide">7 年經驗 • 專業 Motion Design 獨立創作者</span>
+                </div>
+
+                <!-- Main Catchy Title -->
+                <h1 class="text-3xl sm:text-5xl lg:text-6xl font-black text-title-main leading-tight sm:leading-snug tracking-tight mb-8">
+                    我專門把<span class="relative inline-block px-2 text-btn-main underline decoration-btn-main/50 decoration-wavy underline-offset-8">「講不清楚的東西」</span>，<br class="hidden sm:inline">
+                    變成<span class="relative inline-block bg-title-main text-bg-main px-4 py-1 mt-2 sm:mt-0 rounded-2xl transform -rotate-1 shadow-pop">「看得懂的動畫」</span>。
+                </h1>
+
+                <!-- Subtitle -->
+                <p class="text-lg sm:text-xl text-body-main leading-relaxed max-w-2xl mx-auto mb-10 font-medium">
+                    七年來，我協助新創、教育品牌與產品團隊，把抽象概念、產品流程與品牌故事轉化成具有情緒價值的 Motion Design。
+                </p>
+
+                <!-- Action Buttons -->
+                <div class="flex flex-col sm:flex-row items-center justify-center gap-4 sm:gap-6">
+                    <a href="#portfolio" class="w-full sm:w-auto px-8 py-4 bg-btn-main text-btn-text rounded-2xl font-bold text-lg shadow-pop hover:-translate-y-1 hover:shadow-xl transition-all flex items-center justify-center gap-3 group">
+                        <i class="fa-solid fa-play text-xs group-hover:scale-125 transition-transform"></i>
+                        探索精選專案
+                    </a>
+                    <a href="#about" class="w-full sm:w-auto px-8 py-4 bg-white/80 backdrop-blur-sm text-title-main border-2 border-title-main rounded-2xl font-bold text-lg hover:bg-title-main hover:text-bg-main transition-all flex items-center justify-center gap-2">
+                        了解解題思維
+                        <i class="fa-solid fa-arrow-down text-sm"></i>
+                    </a>
+                </div>
+            </div>
+        </section>
+
+        <!-- Core Philosophy Section -->
+        <section id="about" class="py-20 px-4 sm:px-6 lg:px-8 max-w-6xl mx-auto border-t border-title-main/10">
+            <div class="text-center max-w-3xl mx-auto mb-16">
+                <span class="text-btn-main font-bold tracking-widest text-sm uppercase block mb-2">Core Mindset</span>
+                <h2 class="text-3xl sm:text-4xl font-extrabold text-title-main tracking-tight">比起單純畫面好看，我更在乎問題解答</h2>
+            </div>
+
+            <!-- Highlighted Core Question Box -->
+            <div class="bg-white rounded-3xl p-8 sm:p-12 border-2 border-title-main shadow-pop relative mb-16 overflow-hidden">
+                <div class="absolute -right-8 -bottom-8 w-40 h-40 bg-btn-main/10 rounded-full pointer-events-none"></div>
+                <div class="max-w-2xl">
+                    <span class="text-xs font-bold uppercase tracking-wider text-btn-text bg-btn-main px-3 py-1 rounded-full mb-4 inline-block">核心提問</span>
+                    <h3 class="text-2xl sm:text-3xl font-extrabold text-title-main leading-snug mb-6">
+                        相比動畫本身，我更在意的是：<br>
+                        <span class="text-btn-main bg-title-main px-3 py-1 rounded-lg inline-block mt-2">「這支動畫到底要替商業解決什麼問題？」</span>
+                    </h3>
+                    <p class="text-body-main text-lg leading-relaxed font-medium">
+                        因此每次合作，我都會先理解商業目標，再透過流程設計、比喻與動態敘事，把模糊需求逐步具象化。
+                    </p>
+                </div>
+            </div>
+
+            <!-- 3 Step Process Grid -->
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6 sm:gap-8">
+                <!-- Step 1 -->
+                <div class="bg-white/80 backdrop-blur-sm p-8 rounded-3xl border border-title-main/15 shadow-card hover:-translate-y-1 transition-transform">
+                    <div class="w-12 h-12 rounded-2xl bg-accent-blue text-title-main font-black text-xl flex items-center justify-center mb-6 shadow-sm">
+                        01
+                    </div>
+                    <h4 class="text-xl font-bold text-title-main mb-3">理解商業目標</h4>
+                    <p class="text-body-main/90 text-sm leading-relaxed">
+                        釐清動畫背後的真正使命：是增進轉換率、建立品牌信任感，還是降低使用者的理解門檻？
+                    </p>
+                </div>
+
+                <!-- Step 2 -->
+                <div class="bg-white/80 backdrop-blur-sm p-8 rounded-3xl border border-title-main/15 shadow-card hover:-translate-y-1 transition-transform">
+                    <div class="w-12 h-12 rounded-2xl bg-btn-main text-btn-text font-black text-xl flex items-center justify-center mb-6 shadow-sm">
+                        02
+                    </div>
+                    <h4 class="text-xl font-bold text-title-main mb-3">流程與比喻設計</h4>
+                    <p class="text-body-main/90 text-sm leading-relaxed">
+                        將複雜難懂的硬核功能或理念，轉譯成生活化的視覺比喻，設計出邏輯清晰的分鏡腳本。
+                    </p>
+                </div>
+
+                <!-- Step 3 -->
+                <div class="bg-white/80 backdrop-blur-sm p-8 rounded-3xl border border-title-main/15 shadow-card hover:-translate-y-1 transition-transform">
+                    <div class="w-12 h-12 rounded-2xl bg-accent-yellow text-title-main font-black text-xl flex items-center justify-center mb-6 shadow-sm">
+                        03
+                    </div>
+                    <h4 class="text-xl font-bold text-title-main mb-3">動態敘事具象化</h4>
+                    <p class="text-body-main/90 text-sm leading-relaxed">
+                        賦予視覺元素節奏感與情緒價值，用流暢的動態將抽象想法轉變成打動人心的視覺作品。
+                    </p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Portfolio Section -->
+        <section id="portfolio" class="py-20 px-4 sm:px-6 lg:px-8 max-w-6xl mx-auto border-t border-title-main/10">
+            <div class="flex flex-col md:flex-row md:items-end justify-between mb-12">
+                <div>
+                    <span class="text-btn-main font-bold tracking-widest text-sm uppercase block mb-2">Featured Works</span>
+                    <h2 class="text-3xl sm:text-4xl font-extrabold text-title-main tracking-tight">曾製作專案案例</h2>
+                </div>
+                <p class="text-body-main/80 text-sm mt-3 md:mt-0 max-w-xs">
+                    涵蓋知名餐飲、國家公共電視、電信巨頭與頂尖精品珠寶品牌。
+                </p>
+            </div>
+
+            <!-- Portfolio Grid -->
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                <!-- Project 1: 繼光香香雞 -->
+                <div class="group bg-white rounded-3xl overflow-hidden border-2 border-title-main/20 hover:border-title-main transition-all shadow-card hover:shadow-pop flex flex-col">
+                    <div class="relative h-60 sm:h-72 bg-slate-900 overflow-hidden flex items-center justify-center">
+                        <iframe src="https://player.vimeo.com/video/1092344201?background=1&amp;app_id=58479" class="w-full h-full object-cover border-0 pointer-events-none opacity-90 group-hover:scale-105 transition-transform duration-500" allow="autoplay; picture-in-picture"></iframe>
+                        <div class="absolute inset-0 bg-gradient-to-t from-slate-950/80 via-transparent to-black/20"></div>
+                        <div class="absolute bottom-4 left-4 right-4 flex items-center justify-between z-10">
+                            <span class="text-white text-xs font-mono tracking-widest bg-black/60 px-3 py-1 rounded-full backdrop-blur-md border border-white/10">PROMOTIONAL AD</span>
+                            <button onclick="openProjectModal('繼光香香雞世界棒球贊助商廣告', '繼光香香雞 / 貳點品牌整合公司', '分鏡設計 ＋ 動畫製作', '將品牌的經典美食熱情與體育賽事的高昂情緒相融合，透過緊湊視覺節奏與動態分鏡，強化品牌 sponsor 存在感與記憶點。', 'https://player.vimeo.com/video/1092344201?app_id=58479')" class="w-10 h-10 rounded-full bg-btn-main text-btn-text flex items-center justify-center shadow-lg hover:scale-110 transition-transform">
+                                <i class="fa-solid fa-expand text-sm"></i>
+                            </button>
+                        </div>
+                    </div>
+                    <div class="p-6 sm:p-8 flex-1 flex flex-col justify-between">
+                        <div>
+                            <div class="flex flex-wrap gap-2 mb-3">
+                                <span class="bg-title-main/5 text-title-main font-semibold text-xs px-3 py-1 rounded-lg">公司：繼光香香雞</span>
+                                <span class="bg-title-main/5 text-title-main font-semibold text-xs px-3 py-1 rounded-lg">合作：貳點品牌整合公司</span>
+                            </div>
+                            <h3 class="text-xl sm:text-2xl font-bold text-title-main mb-3 group-hover:text-btn-main transition-colors">
+                                繼光香香雞世界棒球贊助商廣告
+                            </h3>
+                            <p class="text-body-main/80 text-sm mb-4 leading-relaxed">
+                                負責完整分鏡設計與動態製作，精準傳達品牌的活力與運動賽事的熱血張力。
+                            </p>
+                        </div>
+                        <div class="pt-4 border-t border-title-main/10 flex items-center justify-between text-xs font-bold text-title-main">
+                            <span class="flex items-center gap-2"><i class="fa-solid fa-layer-group text-btn-main"></i> 分鏡設計 ＋ 動畫製作</span>
+                            <button onclick="openProjectModal('繼光香香雞世界棒球贊助商廣告', '繼光香香雞 / 貳點品牌整合公司', '分鏡設計 ＋ 動畫製作', '將品牌的經典美食熱情與體育賽事的高昂情緒相融合，透過緊湊視覺節奏與動態分鏡，強化品牌 sponsor 存在感與記憶點。', 'https://player.vimeo.com/video/1092344201?app_id=58479')" class="text-btn-main group-hover:translate-x-1 transition-transform flex items-center gap-1">播放專案 <i class="fa-solid fa-arrow-right"></i></button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Project 2: 古典魔力客 -->
+                <div class="group bg-white rounded-3xl overflow-hidden border-2 border-title-main/20 hover:border-title-main transition-all shadow-card hover:shadow-pop flex flex-col">
+                    <div class="relative h-60 sm:h-72 bg-slate-900 overflow-hidden flex items-center justify-center">
+                        <iframe src="https://player.vimeo.com/video/1075097851?badge=0&amp;autoplay=1&amp;loop=1&amp;player_id=0&amp;app_id=58479" class="w-full h-full object-cover border-0" frameborder="0" allow="autoplay; picture-in-picture" sandbox="allow-same-origin allow-scripts allow-pointer-lock allow-forms allow-popups allow-popups-to-escape-sandbox" title="古典魔力客"></iframe>
+                        <div class="absolute inset-0 bg-gradient-to-t from-slate-950/80 via-transparent to-black/20 pointer-events-none"></div>
+                        <div class="absolute bottom-4 left-4 right-4 flex items-center justify-between z-10">
+                            <span class="text-white text-xs font-mono tracking-widest bg-black/60 px-3 py-1 rounded-full backdrop-blur-md border border-white/10">TV ANIMATION</span>
+                            <button onclick="openProjectModal('古典魔力客動畫製作', '公視 / 動工設計公司', '動畫製作 3集', '長青優質兒童科普/古典音樂動畫節目，需將古典音樂家的故事與樂理轉換成生動活潑、能深深吸引兒童專注力的故事動畫。', 'https://player.vimeo.com/video/1075097851?badge=0&amp;autoplay=1&amp;loop=1&amp;player_id=0&amp;app_id=58479')" class="w-10 h-10 rounded-full bg-accent-yellow text-title-main flex items-center justify-center shadow-lg hover:scale-110 transition-transform">
+                                <i class="fa-solid fa-expand text-sm"></i>
+                            </button>
+                        </div>
+                    </div>
+                    <div class="p-6 sm:p-8 flex-1 flex flex-col justify-between">
+                        <div>
+                            <div class="flex flex-wrap gap-2 mb-3">
+                                <span class="bg-title-main/5 text-title-main font-semibold text-xs px-3 py-1 rounded-lg">公司：公視</span>
+                                <span class="bg-title-main/5 text-title-main font-semibold text-xs px-3 py-1 rounded-lg">合作：動工設計公司</span>
+                            </div>
+                            <h3 class="text-xl sm:text-2xl font-bold text-title-main mb-3 group-hover:text-btn-main transition-colors">
+                                古典魔力客動畫製作
+                            </h3>
+                            <p class="text-body-main/80 text-sm mb-4 leading-relaxed">
+                                參與公共電視指標性節目動畫製作共 3 集，呈現高品質且兼具教育寓意的角色與情境動態。
+                            </p>
+                        </div>
+                        <div class="pt-4 border-t border-title-main/10 flex items-center justify-between text-xs font-bold text-title-main">
+                            <span class="flex items-center gap-2"><i class="fa-solid fa-film text-btn-main"></i> 動畫製作 3 集</span>
+                            <button onclick="openProjectModal('古典魔力客動畫製作', '公視 / 動工設計公司', '動畫製作 3集', '長青優質兒童科普/古典音樂動畫節目，需將古典音樂家的故事與樂理轉換成生動活潑、能深深吸引兒童專注力的故事動畫。', 'https://player.vimeo.com/video/1075097851?badge=0&amp;autoplay=1&amp;loop=1&amp;player_id=0&amp;app_id=58479')" class="text-btn-main group-hover:translate-x-1 transition-transform flex items-center gap-1">檢視細節 <i class="fa-solid fa-arrow-right"></i></button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Project 3: 台灣大哥大 -->
+                <div class="group bg-white rounded-3xl overflow-hidden border-2 border-title-main/20 hover:border-title-main transition-all shadow-card hover:shadow-pop flex flex-col">
+                    <div class="relative h-60 sm:h-72 bg-slate-900 overflow-hidden flex items-center justify-center">
+                        <iframe src="https://player.vimeo.com/video/1079053800?background=1&amp;app_id=58479" class="w-full h-full object-cover border-0 pointer-events-none opacity-90 group-hover:scale-105 transition-transform duration-500" allow="autoplay; picture-in-picture"></iframe>
+                        <div class="absolute inset-0 bg-gradient-to-t from-slate-950/80 via-transparent to-black/20"></div>
+                        <div class="absolute bottom-4 left-4 right-4 flex items-center justify-between z-10">
+                            <span class="text-white text-xs font-mono tracking-widest bg-black/60 px-3 py-1 rounded-full backdrop-blur-md border border-white/10">TECH & BRANDING</span>
+                            <button onclick="openProjectModal('台灣大哥大 x 跨界玩家 5G 篇', '台灣大哥大 / 人冊影像公司', '分鏡設計 ＋ 動畫製作', '為電信巨頭 5G 跨界專案設計動畫，將抽象的高速網絡傳輸、低延遲概念以極具科技感與現代感的動態語言呈現在大眾面前。', 'https://player.vimeo.com/video/1079053800?app_id=58479')" class="w-10 h-10 rounded-full bg-accent-blue text-title-main flex items-center justify-center shadow-lg hover:scale-110 transition-transform">
+                                <i class="fa-solid fa-expand text-sm"></i>
+                            </button>
+                        </div>
+                    </div>
+                    <div class="p-6 sm:p-8 flex-1 flex flex-col justify-between">
+                        <div>
+                            <div class="flex flex-wrap gap-2 mb-3">
+                                <span class="bg-title-main/5 text-title-main font-semibold text-xs px-3 py-1 rounded-lg">公司：台灣大哥大</span>
+                                <span class="bg-title-main/5 text-title-main font-semibold text-xs px-3 py-1 rounded-lg">合作：人冊影像公司</span>
+                            </div>
+                            <h3 class="text-xl sm:text-2xl font-bold text-title-main mb-3 group-hover:text-btn-main transition-colors">
+                                台灣大哥大 x 跨界玩家 5G 篇
+                            </h3>
+                            <p class="text-body-main/80 text-sm mb-4 leading-relaxed">
+                                打造具科技感的動態語彙，將抽象的 5G 網路優勢與應用場景轉化為直觀且具質感的畫面。
+                            </p>
+                        </div>
+                        <div class="pt-4 border-t border-title-main/10 flex items-center justify-between text-xs font-bold text-title-main">
+                            <span class="flex items-center gap-2"><i class="fa-solid fa-layer-group text-btn-main"></i> 分鏡設計 ＋ 動畫製作</span>
+                            <button onclick="openProjectModal('台灣大哥大 x 跨界玩家 5G 篇', '台灣大哥大 / 人冊影像公司', '分鏡設計 ＋ 動畫製作', '為電信巨頭 5G 跨界專案設計動畫，將抽象的高速網絡傳輸、低延遲概念以極具科技感與現代感的動態語言呈現在大眾面前。', 'https://player.vimeo.com/video/1079053800?app_id=58479')" class="text-btn-main group-hover:translate-x-1 transition-transform flex items-center gap-1">播放專案 <i class="fa-solid fa-arrow-right"></i></button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Project 4: Sparkle Bar 珠寶動畫 -->
+                <div class="group bg-white rounded-3xl overflow-hidden border-2 border-title-main/20 hover:border-title-main transition-all shadow-card hover:shadow-pop flex flex-col">
+                    <div class="relative h-60 sm:h-72 bg-slate-900 overflow-hidden flex items-center justify-center">
+                        <iframe src="https://player.vimeo.com/video/1089450603?h=041cc6fe19&amp;background=1&amp;autoplay=1&amp;loop=1&amp;muted=1&amp;app_id=58479" class="w-full h-full object-cover border-0 pointer-events-none opacity-90 group-hover:scale-105 transition-transform duration-500" allow="autoplay; picture-in-picture"></iframe>
+                        <div class="absolute inset-0 bg-gradient-to-t from-slate-950/80 via-transparent to-black/20"></div>
+                        <div class="absolute bottom-4 left-4 right-4 flex items-center justify-between z-10">
+                            <span class="text-white text-xs font-mono tracking-widest bg-black/60 px-3 py-1 rounded-full backdrop-blur-md border border-white/10">JEWELRY MOTION</span>
+                            <button onclick="openProjectModal('Sparkle Bar 珠寶動畫', 'Sparkle Bar', '分鏡設計 ＋ 動畫製作', '為 Sparkle Bar 珠寶品牌打造專屬視覺動態，精準雕琢珠寶光影細節與奢華質感，將細緻工藝轉化為充滿情感吸引力的視覺饗宴。', 'https://player.vimeo.com/video/1089450603?h=041cc6fe19&amp;app_id=58479')" class="w-10 h-10 rounded-full bg-accent-yellow text-title-main flex items-center justify-center shadow-lg hover:scale-110 transition-transform">
+                                <i class="fa-solid fa-expand text-sm"></i>
+                            </button>
+                        </div>
+                    </div>
+                    <div class="p-6 sm:p-8 flex-1 flex flex-col justify-between">
+                        <div>
+                            <div class="flex flex-wrap gap-2 mb-3">
+                                <span class="bg-title-main/5 text-title-main font-semibold text-xs px-3 py-1 rounded-lg">公司：Sparkle Bar</span>
+                            </div>
+                            <h3 class="text-xl sm:text-2xl font-bold text-title-main mb-3 group-hover:text-btn-main transition-colors">
+                                Sparkle Bar 珠寶動畫
+                            </h3>
+                            <p class="text-body-main/80 text-sm mb-4 leading-relaxed">
+                                專為珠寶品牌量身打造動態奢華視覺，透過光影變化與高雅節奏呈現產品的頂級質感與價值感。
+                            </p>
+                        </div>
+                        <div class="pt-4 border-t border-title-main/10 flex items-center justify-between text-xs font-bold text-title-main">
+                            <span class="flex items-center gap-2"><i class="fa-solid fa-layer-group text-btn-main"></i> 分鏡設計 ＋ 動畫製作</span>
+                            <button onclick="openProjectModal('Sparkle Bar 珠寶動畫', 'Sparkle Bar', '分鏡設計 ＋ 動畫製作', '為 Sparkle Bar 珠寶品牌打造專屬視覺動態，精準雕琢珠寶光影細節與奢華質感，將細緻工藝轉化為充滿情感吸引力的視覺饗宴。', 'https://player.vimeo.com/video/1089450603?h=041cc6fe19&amp;app_id=58479')" class="text-btn-main group-hover:translate-x-1 transition-transform flex items-center gap-1">播放專案 <i class="fa-solid fa-arrow-right"></i></button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Testimonials Section - Sticky Notes Board -->
+        <section id="testimonials" class="py-20 px-4 sm:px-6 lg:px-8 max-w-6xl mx-auto border-t border-title-main/10">
+            <div class="text-center max-w-3xl mx-auto mb-16">
+                <span class="text-btn-main font-bold tracking-widest text-sm uppercase block mb-2">Testimonials</span>
+                <h2 class="text-3xl sm:text-4xl font-extrabold text-title-main tracking-tight mb-4">客戶最常形容我</h2>
+                <p class="text-body-main/80 text-base">來自品牌夥伴與合作團隊的真實合作反饋（點擊便利貼查看細節）</p>
+            </div>
+
+            <!-- Sticky Notes Container -->
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8 sm:gap-10 pt-6">
+                <!-- Sticky Note 1 -->
+                <div class="sticky-note bg-[#fff9c4] text-title-main p-8 rounded-xl shadow-sticky hover:shadow-sticky-hover transform -rotate-2 hover:rotate-0 hover:scale-105 transition-all cursor-pointer border border-yellow-200" onclick="bounceNote(this)">
+                    <div class="flex items-center justify-between mb-4 border-b border-title-main/10 pb-3">
+                        <span class="text-xs font-bold tracking-widest text-title-main/60 uppercase">Feedback 01</span>
+                        <i class="fa-solid fa-thumbtack text-btn-main text-lg"></i>
+                    </div>
+                    <h3 class="text-2xl font-black text-title-main mb-3">「細節控。」</h3>
+                    <p class="text-body-main text-sm leading-relaxed mb-4">
+                        「從分鏡腳本的微小轉場、視覺比喻的流暢度，到音效與動態節奏的重合點，每一個 Frame 都經過精密雕琢，交付品質每次都超出預期！」
+                    </p>
+                    <div class="text-xs font-bold text-title-main/70 text-right">
+                        — 合作設計公司 專案總監
+                    </div>
+                </div>
+
+                <!-- Sticky Note 2 -->
+                <div class="sticky-note bg-[#e1f5fe] text-title-main p-8 rounded-xl shadow-sticky hover:shadow-sticky-hover transform rotate-2 hover:rotate-0 hover:scale-105 transition-all cursor-pointer border border-blue-200" onclick="bounceNote(this)">
+                    <div class="flex items-center justify-between mb-4 border-b border-title-main/10 pb-3">
+                        <span class="text-xs font-bold tracking-widest text-title-main/60 uppercase">Feedback 02</span>
+                        <i class="fa-solid fa-thumbtack text-btn-main text-lg"></i>
+                    </div>
+                    <h3 class="text-2xl font-black text-title-main mb-3">「很有創意。」</h3>
+                    <p class="text-body-main text-sm leading-relaxed mb-4">
+                        「每次我們給出很模糊抽象的企劃需求時，總能用意想不到但又極其貼切的視覺比喻來呈現，讓原本枯燥的產品特點變得無比生動有趣。」
+                    </p>
+                    <div class="text-xs font-bold text-title-main/70 text-right">
+                        — 品牌行銷負責人
+                    </div>
+                </div>
+
+                <!-- Sticky Note 3 -->
+                <div class="sticky-note bg-[#f8bbd0] text-title-main p-8 rounded-xl shadow-sticky hover:shadow-sticky-hover transform -rotate-1 hover:rotate-0 hover:scale-105 transition-all cursor-pointer border border-pink-200" onclick="bounceNote(this)">
+                    <div class="flex items-center justify-between mb-4 border-b border-title-main/10 pb-3">
+                        <span class="text-xs font-bold tracking-widest text-title-main/60 uppercase">Feedback 03</span>
+                        <i class="fa-solid fa-thumbtack text-btn-main text-lg"></i>
+                    </div>
+                    <h3 class="text-2xl font-black text-title-main mb-3">「合作起來很舒服。」</h3>
+                    <p class="text-body-main text-sm leading-relaxed mb-4">
+                        「溝通非常主動且具商業同理心，不只聽需求，還會站在我們商業目標的角度提供建議。時程掌控極佳，是讓人極度放心的合作夥伴！」
+                    </p>
+                    <div class="text-xs font-bold text-title-main/70 text-right">
+                        — 新創團隊 產品經理
+                    </div>
+                </div>
+            </div>
+
+            <!-- Value Proposition Statement Card -->
+            <div class="mt-16 bg-title-main text-bg-main p-8 sm:p-12 rounded-3xl text-center relative overflow-hidden shadow-pop">
+                <div class="max-w-3xl mx-auto relative z-10">
+                    <i class="fa-solid fa-quote-left text-3xl sm:text-4xl text-btn-main opacity-80 mb-4 block"></i>
+                    <p class="text-xl sm:text-3xl font-extrabold leading-snug tracking-wide mb-2">
+                        因為好的動態設計，不只是好看，<br class="hidden sm:inline">
+                        而是讓人<span class="text-btn-main">願意理解</span>、<span class="text-btn-main">願意相信</span>、<span class="text-btn-main">願意留下來</span>。
+                    </p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Contact CTA Section -->
+        <section id="contact" class="py-20 px-4 sm:px-6 lg:px-8 max-w-5xl mx-auto text-center">
+            <div class="bg-white rounded-3xl p-8 sm:p-12 border-2 border-title-main shadow-pop text-left relative overflow-hidden">
+                <div class="text-center max-w-2xl mx-auto mb-12">
+                    <span class="text-xs font-bold tracking-widest text-title-main uppercase bg-accent-yellow px-4 py-1.5 rounded-full inline-block mb-3">Start A Project</span>
+                    <h2 class="text-3xl sm:text-4xl font-black text-title-main mb-3">合作流程與預約諮詢</h2>
+                    <p class="text-body-main text-base font-medium">只要 3 個簡單步驟，就能開始把您的想法轉化成高質感的動態視覺！</p>
+                </div>
+
+                <!-- 3 Steps Cards -->
+                <div class="space-y-6 mb-12">
+                    <!-- Step 01 -->
+                    <div class="flex flex-col sm:flex-row items-start sm:items-center gap-5 p-6 rounded-2xl bg-bg-main/60 border-2 border-title-main/15 hover:border-title-main transition-all">
+                        <div class="w-16 h-14 rounded-2xl bg-btn-main text-btn-text flex-shrink-0 flex items-center justify-center font-black text-base shadow-sm">
+                            Step 01
+                        </div>
+                        <div class="flex-1">
+                            <h3 class="text-xl font-extrabold text-title-main mb-1 flex flex-wrap items-center gap-1">
+                                請填寫 👉 <a href="https://www.surveycake.com/s/v7x7N" target="_blank" rel="noopener noreferrer" class="text-btn-main underline decoration-btn-main/50 hover:text-title-main transition-colors inline-flex items-center gap-1">動畫製作表單 <i class="fa-solid fa-arrow-up-right-from-square text-xs"></i></a>
+                            </h3>
+                            <p class="text-body-main/80 text-sm font-medium">這將幫助你釐清需求。</p>
+                        </div>
+                        <a href="https://www.surveycake.com/s/v7x7N" target="_blank" rel="noopener noreferrer" class="px-5 py-2.5 rounded-xl bg-btn-main text-btn-text font-bold text-sm shadow-pop hover:-translate-y-0.5 transition-all whitespace-nowrap self-stretch sm:self-auto text-center">
+                            填寫動畫表單
+                        </a>
+                    </div>
+
+                    <!-- Step 02 -->
+                    <div class="flex flex-col sm:flex-row items-start sm:items-center gap-5 p-6 rounded-2xl bg-bg-main/60 border-2 border-title-main/15 hover:border-title-main transition-all">
+                        <div class="w-16 h-14 rounded-2xl bg-accent-blue text-title-main flex-shrink-0 flex items-center justify-center font-black text-base shadow-sm">
+                            Step 02
+                        </div>
+                        <div class="flex-1">
+                            <h3 class="text-xl font-extrabold text-title-main mb-1">
+                                跟我預約免費線上諮詢
+                            </h3>
+                            <p class="text-body-main/80 text-sm font-medium leading-relaxed">
+                                讓我深入了解你的需求。並進一步解釋動畫能帶來的商業價值有哪些？
+                            </p>
+                        </div>
+                    </div>
+
+                    <!-- Step 03 -->
+                    <div class="flex flex-col sm:flex-row items-start sm:items-center gap-5 p-6 rounded-2xl bg-bg-main/60 border-2 border-title-main/15 hover:border-title-main transition-all">
+                        <div class="w-16 h-14 rounded-2xl bg-accent-yellow text-title-main flex-shrink-0 flex items-center justify-center font-black text-base shadow-sm">
+                            Step 03
+                        </div>
+                        <div class="flex-1">
+                            <h3 class="text-xl font-extrabold text-title-main mb-1">
+                                專屬方案與報價
+                            </h3>
+                            <p class="text-body-main/80 text-sm font-medium leading-relaxed">
+                                根據會議結果，我將根據您的需求提供合適的方案及報價。你不用現在決定，只要先跟我聊聊，我會幫你一起想。
+                            </p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- CTA Actions & Email Info Box -->
+                <div class="bg-title-main text-bg-main p-6 sm:p-8 rounded-2xl flex flex-col sm:flex-row items-center justify-between gap-6 shadow-card">
+                    <div>
+                        <div class="text-xs font-bold text-accent-yellow uppercase tracking-wider mb-1">Direct Contact Email</div>
+                        <div class="text-lg sm:text-xl font-extrabold flex items-center gap-2">
+                            <i class="fa-regular fa-envelope text-btn-main"></i>
+                            <a href="mailto:tpm8134@gmail.com" class="hover:text-btn-main transition-colors underline decoration-btn-main/50">tpm8134@gmail.com</a>
+                        </div>
+                    </div>
+                    <div class="flex items-center gap-3 w-full sm:w-auto">
+                        <a href="mailto:tpm8134@gmail.com?subject=Motion%20Design%20專案諮詢&body=你好，我想預約免費線上諮詢..." class="w-full sm:w-auto px-8 py-3.5 bg-btn-main text-btn-text rounded-xl font-bold text-base shadow-pop hover:-translate-y-0.5 transition-all text-center flex items-center justify-center gap-2">
+                            <i class="fa-solid fa-comments"></i>
+                            線上與我聊聊
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- Footer -->
+    <footer class="border-t border-title-main/10 py-10 px-4 sm:px-6 lg:px-8 text-center text-xs text-body-main/70">
+        <div class="max-w-6xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-4">
+            <div class="flex items-center gap-2">
+                <div class="w-6 h-6 rounded-md bg-title-main text-bg-main flex items-center justify-center font-bold text-xs">M</div>
+                <span class="font-bold text-title-main">Motion Design Studio</span>
+            </div>
+            <p>© 2026 Motion Design Portfolio. All rights reserved. 專門將抽象變成看得懂的動態敘事。</p>
+            <div class="flex gap-4 text-base text-title-main">
+                <a href="#" class="hover:text-btn-main transition-colors" title="Vimeo"><i class="fa-brands fa-vimeo-v"></i></a>
+                <a href="#" class="hover:text-btn-main transition-colors" title="Instagram"><i class="fa-brands fa-instagram"></i></a>
+                <a href="#" class="hover:text-btn-main transition-colors" title="LinkedIn"><i class="fa-brands fa-linkedin-in"></i></a>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Project Modal -->
+    <div id="projectModal" class="fixed inset-0 z-50 hidden flex items-center justify-center p-4 bg-title-main/70 modal-blur">
+        <div class="bg-bg-main border-2 border-title-main rounded-3xl max-w-3xl w-full p-6 sm:p-8 shadow-2xl relative transform transition-all animate-fade-in max-h-[90vh] overflow-y-auto">
+            <button onclick="closeProjectModal()" class="absolute top-4 right-4 w-10 h-10 rounded-full bg-title-main/10 hover:bg-title-main text-title-main hover:text-bg-main flex items-center justify-center transition-colors z-20">
+                <i class="fa-solid fa-xmark text-lg"></i>
+            </button>
+            
+            <div class="mb-3">
+                <span id="modalCategory" class="text-xs font-bold text-btn-text bg-btn-main px-3 py-1 rounded-full"></span>
+            </div>
+            
+            <h3 id="modalTitle" class="text-2xl sm:text-3xl font-extrabold text-title-main mb-1"></h3>
+            <p id="modalClient" class="text-xs font-bold text-body-main/70 mb-4"></p>
+            
+            <!-- Video Player Box in Modal -->
+            <div id="modalVideoContainer" class="bg-slate-900 rounded-2xl aspect-video w-full mb-6 flex items-center justify-center text-white/80 relative overflow-hidden shadow-inner border border-title-main/20">
+            </div>
+
+            <p id="modalDesc" class="text-body-main text-sm sm:text-base leading-relaxed mb-6 font-medium"></p>
+
+            <div class="flex justify-end gap-3">
+                <button onclick="closeProjectModal()" class="px-6 py-2.5 rounded-xl border-2 border-title-main text-title-main font-bold text-sm hover:bg-title-main hover:text-bg-main transition-colors">
+                    關閉播放視窗
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Notification Toast Message Box (No Alert) -->
+    <div id="toast" class="fixed bottom-6 right-6 z-50 hidden bg-title-main text-bg-main px-6 py-4 rounded-2xl shadow-pop border-2 border-btn-main flex items-center gap-3 transition-all">
+        <i class="fa-solid fa-circle-check text-btn-main text-xl"></i>
+        <div>
+            <h4 class="font-bold text-sm">諮詢表單已成功送出！</h4>
+            <p class="text-xs opacity-80">我會盡快在 24 小時內與您聯繫。</p>
+        </div>
+    </div>
+
+    <!-- JavaScript Logic -->
+    <script>
+        // Mobile Menu Toggle
+        const mobileMenuBtn = document.getElementById('mobile-menu-btn');
+        const mobileMenu = document.getElementById('mobile-menu');
+        const mobileNavLinks = document.querySelectorAll('.mobile-nav-link');
+
+        mobileMenuBtn.addEventListener('click', () => {
+            mobileMenu.classList.toggle('hidden');
+        });
+
+        mobileNavLinks.forEach(link => {
+            link.addEventListener('click', () => {
+                mobileMenu.classList.add('hidden');
+            });
+        });
+
+        // Project Modal Logic with Video Embedding
+        const modal = document.getElementById('projectModal');
+        const modalTitle = document.getElementById('modalTitle');
+        const modalClient = document.getElementById('modalClient');
+        const modalCategory = document.getElementById('modalCategory');
+        const modalDesc = document.getElementById('modalDesc');
+        const modalVideoContainer = document.getElementById('modalVideoContainer');
+
+        function openProjectModal(title, client, category, desc, videoSrc) {
+            modalTitle.textContent = title;
+            modalClient.textContent = '合作對象：' + client;
+            modalCategory.textContent = category;
+            modalDesc.textContent = desc;
+
+            if (videoSrc) {
+                modalVideoContainer.innerHTML = `<iframe src="${videoSrc}" class="w-full h-full border-0 rounded-2xl" allow="autoplay; fullscreen; picture-in-picture; clipboard-write; encrypted-media; web-share" allowfullscreen></iframe>`;
+            } else {
+                modalVideoContainer.innerHTML = `<div class="text-center p-4"><i class="fa-solid fa-circle-play text-5xl text-btn-main mb-2 block animate-bounce"></i><span class="text-xs font-mono text-slate-300">影片預覽準備中</span></div>`;
+            }
+
+            modal.classList.remove('hidden');
+            document.body.style.overflow = 'hidden';
+        }
+
+        function closeProjectModal() {
+            modal.classList.add('hidden');
+            document.body.style.overflow = 'auto';
+            if (modalVideoContainer) {
+                modalVideoContainer.innerHTML = ''; // Clear video iframe to stop playback
+            }
+        }
+
+        // Close Modal when clicking outside
+        modal.addEventListener('click', (e) => {
+            if (e.target === modal) {
+                closeProjectModal();
+            }
+        });
+
+        // Interactive Sticky Note Bounce
+        function bounceNote(element) {
+            element.classList.add('scale-110');
+            setTimeout(() => {
+                element.classList.remove('scale-110');
+            }, 200);
+        }
+
+        // Form Submit Handler
+        function handleFormSubmit(event) {
+            event.preventDefault();
+            const toast = document.getElementById('toast');
+            toast.classList.remove('hidden');
+            event.target.reset();
+
+            setTimeout(() => {
+                toast.classList.add('hidden');
+            }, 4000);
+        }
+    </script>
+</body>
+</html>
